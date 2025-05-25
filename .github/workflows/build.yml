@@ -47,6 +47,25 @@ jobs:
           go build -C geodat2srs ./
           ./geodat2srs/geodat2srs geoip -i ./publish/geoip.dat -o ./tmp/sing-box/rule-set-geoip/
           ./geodat2srs/geodat2srs geosite -i ./publish/geosite.dat -o ./tmp/sing-box/rule-set-geosite/
+          
+          required_files=(
+            "geosite-ru-available-only-inside.srs"
+            "geosite-ru-blocked-all.srs"
+            "geosite-ru-blocked.srs"
+            "geosite-category-ads-all.srs"
+            "geoip-ru-blocked-community.srs"
+            "geoip-ru.srs"
+            "geoip-ru-blocked.srs"
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [[ $file == geosite-* ]]; then
+              cp "./tmp/sing-box/rule-set-geosite/$file" ./publish/
+            else
+              cp "./tmp/sing-box/rule-set-geoip/$file" ./publish/
+            fi
+          done
+          
           cd ./tmp/sing-box || exit 1
           zip -r ../../publish/sing-box.zip *
 
